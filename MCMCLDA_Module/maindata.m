@@ -207,3 +207,18 @@ ylabel('state')
 title('Multi Class Markov Chain Modelling');
 %%
 %Estimation of transition probability matrix.
+P_MC = zeros(numStates,numStates);
+for t=1:L-1
+    P_MC(y_obs(t),y_obs(t+1))= P_MC(y_obs(t),y_obs(t+1))+1;
+end
+P_MC_cum = P_MC;
+for j=2:numStates
+    P_MC_cum(:,j) = P_MC_cum(:,j-1) + P_MC(:,j);     %cumulative version of P.
+end
+for j=1:numStates
+    P_MC(:,j) = P_MC(:,j)./P_MC_cum(:,numStates);                 %Normalize transition matrix
+end
+P_MC_cum = P_MC;
+for j=2:numStates
+    P_MC_cum(:,j) = P_MC_cum(:,j-1) + P_MC(:,j);     %normalized cumulative version of P.
+end
